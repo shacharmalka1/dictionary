@@ -1,20 +1,17 @@
 const AWS = require('aws-sdk');
 require('dotenv').config();
 
-
-console.log(process.env.AWS_DEFAULT_REGION);
-
 AWS.config.update({
-    region: "us-east-2",
-    accessKeyId: "AKIA5RYPHNDP3DF6GEM6",
-    secretAccessKey: "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",
+    region: "us-east-1",
+    accessKeyId: "AKIAZIR3MC4VICC73C7R",
+    secretAccessKey: "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",
     apiVersion:'2012-08-10'
 });
 
 const dynamoClient = new AWS.DynamoDB();
-
+const docClient = new AWS.DynamoDB.DocumentClient();
 // const TABLE_NAME = 'english-dictionary';
-const TABLE_NAME = 'dictionary';
+const TABLE_NAME = 'Dictionary';
 const getWords = async () => {
     const params = {
         TableName: TABLE_NAME,
@@ -37,7 +34,7 @@ const getWordById = async (id) => {
 const addOrUpdateWord = async (words) => {
     const params = {
         RequestItems: {
-            dictionary: words.map(({ id, word, partOfSpeech, definition }) => {
+            Dictionary: words.map(({ id, word, partOfSpeech, definition }) => {
                 return {
                     PutRequest: {
                         Item: {
@@ -83,12 +80,42 @@ const deleteWord = async (id) => {
     return await dynamoClient.delete(params).promise();
 };
 
-getWords()
+const getWord = async (word) => {
+    const params = {
+        TableName: TABLE_NAME,
+        IndexName: 'word-index',
+        KeyConditionExpression: 'word = :w',
+        ExpressionAttributeValues: { ':w': word }
+    };
+    return await docClient.query(params).promise();
+};
 
+const getWordByPart = async (word) => {
+    const params = {
+        TableName: TABLE_NAME,
+        IndexName: 'word-index',
+        KeyConditionExpression: 'word = :w',
+        ExpressionAttributeValues: { ':w': word}
+    };
+    return await docClient.query(params).promise();
+};
+const getRandomWordByPart = async (partOfSpeech) => {
+    const params = {
+        TableName: TABLE_NAME,
+        IndexName: 'partOfSpeech-index',
+        KeyConditionExpression: 'partOfSpeech = :p',
+        ExpressionAttributeValues: { ':p': partOfSpeech }
+    };
+    const { Items } = await docClient.query(params).promise();
+    return [Items[Math.floor(Math.random() * Items.length)]]
+};
 module.exports = {
     dynamoClient,
     getWords,
     getWordById,
     addOrUpdateWord,
     deleteWord,
+    getWord,
+    getWordByPart,
+    getRandomWordByPart,
 };
