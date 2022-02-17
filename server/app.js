@@ -9,12 +9,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-//Default render
-app.get('/part-of-speech/:part', async (req, res) => {
-    const { part } = req.params
-    const response = await getRandomWordByPart(part);
-    res.send(response) 
-})
 app.get('/:word', async (req, res) => {
     const { word } = req.params
     const { Items } = await getWord(word);

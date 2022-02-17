@@ -2,7 +2,6 @@ import React,{ useRef, useState } from "react";
 import {
   getDefinition,
   getDefinitionsByPart,
-  getDefinitionsByEnumPart
 }
 from '../Services/requests'
 import { TextField, Box, Button } from "@material-ui/core";
@@ -43,8 +42,6 @@ export default function Dictionary() {
      renderDefinitions(newWord)
     else if(newWord && (selectedPart !== 'none' || selectedPart))
       renderDefinitionsByPart(newWord,selectedPart)
-    if(!newWord && selectedPart && selectedPart !== 'none')
-      renderDefinitionsByEnumPart()
   }
 
   const renderDefinitions = async (word = newWord) =>{  // -- GET /:word
@@ -53,11 +50,6 @@ export default function Dictionary() {
   }
   const renderDefinitionsByPart = async () =>{  // -- GET /:word/:partOfSpeech   
     const definitionArray = await getDefinitionsByPart(capitalize(newWord),selectedPart)
-    setWordsDefinitions(definitionArray)
-  }
-
-  const renderDefinitionsByEnumPart = async () =>{  // -- GET /part-of-speech/:part
-    const definitionArray = await getDefinitionsByEnumPart(selectedPart)
     setWordsDefinitions(definitionArray)
   }
 

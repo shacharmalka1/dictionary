@@ -32,23 +32,7 @@ const getDefinitionsByPart = async (word,part) =>{
     }
 }
 
-const getDefinitionsByEnumPart = async (part) =>{
-  try{
-      const definitionsArray = await axios.get(`${baseUrl}/part-of-speech/${part}`); //except to get the words objects
-      console.log(definitionsArray.data);
-      if(definitionsArray.data.length === 0){
-        niceAlert('Word doesn\'t exist in dictionary','error')
-        return []
-        }
-        else
-        return definitionsArray.data
-    } catch (err) {
-      console.error(err);
-    }
-}
-
 export {
   getDefinition,
   getDefinitionsByPart,
-  getDefinitionsByEnumPart
 }

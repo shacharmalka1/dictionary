@@ -2,11 +2,12 @@ const AWS = require('aws-sdk');
 require('dotenv').config();
 
 AWS.config.update({
-    region: "us-east-1",
-    accessKeyId: "AKIAZIR3MC4VICC73C7R",
-    secretAccessKey: "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",
-    apiVersion:'2012-08-10'
+    region: process.env.AWS_REGION, 
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,    
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    apiVersion:'2012-08-10' 
 });
+
 
 const dynamoClient = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
@@ -99,16 +100,7 @@ const getWordByPart = async (word) => {
     };
     return await docClient.query(params).promise();
 };
-const getRandomWordByPart = async (partOfSpeech) => {
-    const params = {
-        TableName: TABLE_NAME,
-        IndexName: 'partOfSpeech-index',
-        KeyConditionExpression: 'partOfSpeech = :p',
-        ExpressionAttributeValues: { ':p': partOfSpeech }
-    };
-    const { Items } = await docClient.query(params).promise();
-    return [Items[Math.floor(Math.random() * Items.length)]]
-};
+
 module.exports = {
     dynamoClient,
     getWords,
@@ -117,5 +109,4 @@ module.exports = {
     deleteWord,
     getWord,
     getWordByPart,
-    getRandomWordByPart,
 };
