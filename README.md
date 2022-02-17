@@ -37,4 +37,4 @@
 
 
 - #### Deployment
-- [x] [DictionaryApp](https://english-dictionary-sagi.s3.us-east-2.amazonaws.com/index.html)
+- [x] [DictionaryApp](https://english-dictionary-shachar.s3.amazonaws.com/index.html)
