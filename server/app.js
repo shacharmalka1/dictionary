@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors');
 const port = 8080
-const { getWord, getWordByPart, getRandomWordByPart } = require('./dynamo')
+const { getWord, getWordByPart , getRandomWordByPart} = require('./dynamo')
 
 //Body parser
 app.use(cors());
@@ -21,6 +21,14 @@ app.get('/:word/:partOfSpeech', async (req, res) => {
     Items = Items.filter((word) => word.partOfSpeech === partOfSpeech)
     return res.send(Items)
 })
+
+app.get('/part-of-speech/:part', async (req, res) => {
+    const { part } = req.params
+    const response = await getRandomWordByPart(part);
+    console.log(response)
+    res.send(response) 
+})
+
 
 
 app.listen(port, () => {

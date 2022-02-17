@@ -13,24 +13,7 @@ const dynamoClient = new AWS.DynamoDB();
 const docClient = new AWS.DynamoDB.DocumentClient();
 // const TABLE_NAME = 'english-dictionary';
 const TABLE_NAME = 'Dictionary';
-const getWords = async () => {
-    const params = {
-        TableName: TABLE_NAME,
-    };
-    const words = await dynamoClient.scan(params).promise();
-    return words;
-    // return words.length;
-};
 
-const getWordById = async (id) => {
-    const params = {
-        TableName: TABLE_NAME,
-        Key: {
-            id,
-        },
-    };
-    return await dynamoClient.get(params).promise();
-};
 
 const addOrUpdateWord = async (words) => {
     const params = {
@@ -70,17 +53,6 @@ const addOrUpdateWord = async (words) => {
 };
 
 
-
-const deleteWord = async (id) => {
-    const params = {
-        TableName: TABLE_NAME,
-        Key: {
-            id,
-        },
-    };
-    return await dynamoClient.delete(params).promise();
-};
-
 const getWord = async (word) => {
     const params = {
         TableName: TABLE_NAME,
@@ -101,12 +73,22 @@ const getWordByPart = async (word) => {
     return await docClient.query(params).promise();
 };
 
+const getRandomWordByPart = async (partOfSpeech) => {
+    const params = {
+        TableName: TABLE_NAME,
+        IndexName: 'partOfSpeech-index',
+        KeyConditionExpression: 'partOfSpeech = :p',
+        ExpressionAttributeValues: { ':p': partOfSpeech }
+    };
+    const { Items } = await docClient2.query(params).promise();
+    return [Items[Math.floor(Math.random() * Items.length)]]
+};
+
+
 module.exports = {
     dynamoClient,
-    getWords,
-    getWordById,
     addOrUpdateWord,
-    deleteWord,
     getWord,
     getWordByPart,
+    getRandomWordByPart
 };

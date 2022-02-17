@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { niceAlert } from "../Features/NiceAlerts.js";
-const baseUrl = 'http://localhost:8080'
+const baseUrl = 'https://english-dictionary-shachar.herokuapp.com/'
 
 const getDefinition = async (word) =>{
   try{
